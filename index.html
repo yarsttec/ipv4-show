@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IPv4 calc</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<style>
+		@import url( http://fonts.googleapis.com/css?family=Nova+Mono );
+		
+		* {
+			padding: 0px;
+			margin: 0px;
+		}
+		BODY {
+			width: 100%;
+			height: 100%;
+		}
+		ARTICLE {
+			display: block;
+			width: 900px;
+			position: relative;
+			margin: 50px auto;
+		}
+		SECTION {
+			display: block;
+			width: 100%;
+		}
+		SECTION.addr {
+			text-align: center;
+			height: 150px;
+			padding-top: 35px;
+			padding-left: 20px;
+			width: 880px;
+		}
+		SECTION.addr > DIV {
+			float: left;
+		}
+		SECTION.addr INPUT {
+			width: 100%;
+			border: 0px;
+			border-image-width: 0px;
+			font-family: 'Nova Mono', 'Courier New';
+			font-size: 60px;
+			text-align: center;
+			border: 1px solid #D2D7D3;
+			border-width: 1px 3px 5px 1px;
+		}
+		SECTION.addr DIV.byte {
+			width: 150px;
+		}
+		SECTION.addr DIV.dec {
+			font-family: 'Nova Mono', 'Courier New';
+			font-size: 60px;
+			text-align: center;
+		}
+		SECTION.addr DIV.bin {
+			font-family: 'Nova Mono', 'Courier New';
+			font-size: 32px;
+			text-align: center;
+		}
+		SECTION.addr DIV.bin .green {
+			color: #26A65B;
+		}
+		SECTION.addr DIV.bin .red {
+			color: #D91E18;
+		}
+		SECTION.addr DIV.prefix {
+			width: 100px;
+		}
+		SECTION.addr DIV.dot,
+		SECTION.addr DIV.slash {
+			width: 40px;
+		}
+		
+		SECTION.mask {
+			text-align: center;
+			height: 110px;
+			padding-top: 15px;
+			padding-left: 20px;
+			width: 880px;
+			font-family: 'Nova Mono', 'Courier New';
+		}
+		SECTION.mask > DIV {
+			float: left;
+		}
+		SECTION.mask DIV.byte {
+			width: 150px;
+		}
+		SECTION.mask DIV.dec {
+			font-size: 40px;
+			text-align: center;
+		}
+		SECTION.mask DIV.bin {
+			font-size: 32px;
+			text-align: center;
+		}
+		SECTION.mask DIV.bin .green {
+			color: #26A65B;
+		}
+		SECTION.mask DIV.bin .red {
+			color: #D91E18;
+		}
+		SECTION.mask DIV.prefix {
+			width: 100px;
+		}
+		SECTION.mask DIV.dot,
+		SECTION.mask DIV.slash {
+			width: 40px;
+		}
+		
+		SECTION.net {
+			text-align: center;
+			height: 110px;
+			padding-top: 15px;
+			padding-left: 20px;
+			width: 880px;
+			font-family: 'Nova Mono', 'Courier New';
+		}
+		SECTION.net > DIV {
+			float: left;
+		}
+		SECTION.net DIV.byte {
+			width: 150px;
+		}
+		SECTION.net DIV.dec {
+			font-size: 40px;
+			text-align: center;
+		}
+		SECTION.net DIV.dot,
+		SECTION.net DIV.slash {
+			width: 40px;
+		}
+	</style>
+</head>
+<body>
+	<article>
+		<section class="addr">
+			<div class="byte">
+				<div class="dec"><input type="text" id="addr-0-dec" value="192"/></div>
+				<div class="bin">
+					<span class="green" id="addr-0-bin-g"></span><span class="red" id="addr-0-bin-r"></span>
+				</div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+				<div class="bin">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec">
+					<input type="text" id="addr-1-dec" value="168"/>
+				</div>
+				<div class="bin">
+					<span class="green" id="addr-1-bin-g"></span><span class="red" id="addr-1-bin-r"></span>
+				</div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+				<div class="bin">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec">
+					<input type="text" id="addr-2-dec" value="20"/>
+				</div>
+				<div class="bin">
+					<span class="green" id="addr-2-bin-g"></span><span class="red" id="addr-2-bin-r"></span>
+				</div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+				<div class="bin">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec">
+					<input type="text" id="addr-3-dec" value="5"/>
+				</div>
+				<div class="bin">
+					<span class="green" id="addr-3-bin-g"></span><span class="red" id="addr-3-bin-r"></span>
+				</div>
+			</div>
+			<div class="slash">
+				<div class="dec">/</div>
+			</div>
+			<div class="prefix">
+				<div class="dec">
+					<input type="text" id="prefix" value="22"/>
+				</div>
+			</div>
+		</section>
+		<section class="mask">
+			<div class="byte">
+				<div class="bin">
+					<span class="green" id="mask-0-bin-g"></span><span class="red" id="mask-0-bin-r"></span>
+				</div>
+				<div class="dec" id="mask-0-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="bin">.</div>
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="bin">
+					<span class="green" id="mask-1-bin-g"></span><span class="red" id="mask-1-bin-r"></span>
+				</div>
+				<div class="dec" id="mask-1-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="bin">.</div>
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="bin">
+					<span class="green" id="mask-2-bin-g"></span><span class="red" id="mask-2-bin-r"></span>
+				</div>
+				<div class="dec" id="mask-2-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="bin">.</div>
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="bin">
+					<span class="green" id="mask-3-bin-g"></span><span class="red" id="mask-3-bin-r"></span>
+				</div>
+				<div class="dec" id="mask-3-dec"></div>
+			</div>
+		</section>
+		<section class="net">
+			<div class="byte">
+				<div class="dec" id="net-0-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec" id="net-1-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec" id="net-2-dec"></div>
+			</div>
+			<div class="dot">
+				<div class="dec">.</div>
+			</div>
+			<div class="byte">
+				<div class="dec" id="net-3-dec"></div>
+			</div>
+		</section>
+	</article>
+	
+	
+	<script>
+		$( document ).ready( function() {
+			// searching objects
+			var $addr = [0,1,2,3].map(function(no) {
+				return {
+					'dec': setNumHdls( $("#addr-"+no+"-dec"), 0, 255 ),
+					'bin': {
+						'g': $("#addr-"+no+"-bin-g"),
+						'r': $("#addr-"+no+"-bin-r")
+					}
+				};
+			});
+			var $prefix = setNumHdls( $("#prefix"), 8, 31 );
+			var $mask = [0,1,2,3].map(function(no) {
+				return {
+					'dec': $("#mask-"+no+"-dec"),
+					'bin': {
+						'g': $("#mask-"+no+"-bin-g"),
+						'r': $("#mask-"+no+"-bin-r")
+					}
+				};
+			});
+			var $net = [0,1,2,3].map(function(no) {
+				return {
+					'dec': $("#net-"+no+"-dec")
+				};
+			});
+			
+			
+			function setNumHdls( elem, min, max ) {
+				elem.keypress(function( evt ) {
+					var obj = evt.target;
+					if( evt.key==='Up' || evt.key==='ArrowUp' ) {
+						var val = +obj.value;
+						if( !isNaN(val) && val<max ) {
+							obj.value = val + 1;
+						}
+						else return;
+					}
+					else if( evt.key==='Down' || evt.key==='ArrowDown' ) {
+						var val = +obj.value;
+						if( !isNaN(val) && val>min ) {
+							obj.value = val - 1;
+						}
+						else return;
+					}
+					setTimeout( recalc, 10 );
+				});
+				elem.change( recalc );
+				return elem;
+			}
+			
+			function recalc() {
+				function parseVal( el, min, max ) {
+					var val = +el.val();
+					if( isNaN(val) || val>max || val<min ) {
+						return null;
+					}
+					return val;
+				}
+				function toBin( val, len ) {
+					return (len)
+					     ? ('00000000'+val.toString(2)).slice(-len)
+					     : '';
+				}
+				
+				var b = $addr.map( function(el) {
+					return parseVal( el.dec, 0, 255 );
+				});
+				var pref = parseVal( $prefix, 0, 32 );
+				
+				if( b[0]==null || b[1]==null || b[2]==null || b[3]==null || pref==null ) {
+					return;
+				}
+				var nb, hb; // net bits, host bits
+				for( var i=0; i<4; i++ ) {
+					nb = Math.max( Math.min(pref-8*i, 8), 0 );
+					hb = 8 - nb;
+					// net part
+					$addr[i].bin.g.text( toBin(b[i]>>hb, nb) );
+					// host part
+					$addr[i].bin.r.text( toBin(b[i]&((1<<hb)-1), hb) );
+					// mask
+					$mask[i].bin.g.text( toBin((1<<nb)-1, nb) );
+					$mask[i].bin.r.text( toBin(0, hb) );
+					$mask[i].dec.text( ((1<<nb)-1)<<hb );
+					// network
+					$net[i].dec.text( b[i] & (((1<<nb)-1)<<hb) );
+				}
+			}
+			
+			recalc();
+		});
+	</script>
+</body>
+</html>
